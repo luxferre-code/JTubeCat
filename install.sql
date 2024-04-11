@@ -1,7 +1,7 @@
-DROP TABLE IF EXISTS users;
-DROP TABLE IF EXISTS category;
-DROP TABLE IF EXISTS content;
-DROP TABLE IF EXISTS access;
+DROP TABLE IF EXISTS users CASCADE;
+DROP TABLE IF EXISTS category CASCADE;
+DROP TABLE IF EXISTS content CASCADE;
+DROP TABLE IF EXISTS access CASCADE;
 
 CREATE TABLE users
 (
@@ -9,7 +9,7 @@ CREATE TABLE users
     pseudo TEXT,
     email TEXT,
     password CHAR(256),
-    type TEXT
+    type TEXT,
     CONSTRAINT pk_users PRIMARY KEY (id),
     CONSTRAINT uq_users_pseudo UNIQUE (pseudo),
     CONSTRAINT uq_users_email UNIQUE (email),
@@ -34,7 +34,7 @@ CREATE TABLE content
     original_langage TEXT,
     category_id INT,
     CONSTRAINT pk_content PRIMARY KEY (id),
-    CONSTRAINT fk_content_category FOREIGN KEY (category_id) REFERENCES category(id),
+    CONSTRAINT fk_content_category FOREIGN KEY (category_id) REFERENCES category(id) ON DELETE CASCADE ON UPDATE CASCADE,
     CONSTRAINT check_vote_avg CHECK (vote_avg >= 0 AND vote_avg <= 10)
 );
 
@@ -43,6 +43,6 @@ CREATE TABLE access
     user_id TEXT,
     content_id TEXT,
     CONSTRAINT pk_access PRIMARY KEY (user_id, content_id),
-    CONSTRAINT fk_access_user FOREIGN KEY (user_id) REFERENCES users(id),
-    CONSTRAINT fk_access_content FOREIGN KEY (content_id) REFERENCES content(id)
+    CONSTRAINT fk_access_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    CONSTRAINT fk_access_content FOREIGN KEY (content_id) REFERENCES content(id) ON DELETE CASCADE ON UPDATE CASCADE
 );
